@@ -1,4 +1,6 @@
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JTextField;
@@ -8,9 +10,16 @@ import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 import java.awt.Font;
+import java.awt.Toolkit;
+
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.FontUIResource;
 
 public class Menu {
@@ -23,12 +32,13 @@ public class Menu {
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JTextField textField_4;
 	private JTextField textField_5;
+	
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+		new Thread() {
 			public void run() {
 				try {
 					Menu window = new Menu();
@@ -37,7 +47,7 @@ public class Menu {
 					e.printStackTrace();
 				}
 			}
-		});
+		}.start();
 	}
 
 	/**
@@ -51,6 +61,9 @@ public class Menu {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+
+
+		
 		frame = new JFrame("FastRNAmutants");
 		frame.setBounds(490, 200, 560, 471);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,7 +92,9 @@ public class Menu {
 		JButton btnNewButton = new JButton("Start");
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		btnNewButton.setBounds(310, 346, 121, 37);
+		
 		btnNewButton.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {	
 				if(!textField.getText().equals("") && CheckRNAInput(textField.getText())
 						&& !textField_1.getText().equals("") && CheckNumberInput(textField_1.getText())
@@ -92,13 +107,23 @@ public class Menu {
 						&& (rdbtnNewRadioButton.isSelected()||rdbtnNewRadioButton_1.isSelected())) {
 					ViennaRNA viennaRNA=new ViennaRNA();
 					RNAInfo rnainfo=viennaRNA.RNAfold(textField.getText());
+					
+					
+				
 					System.out.println("Structure of optimal:  "+rnainfo.getStructure());
 					System.out.println("Energy of optimal:  "+rnainfo.getEnergy());
+				
+					
+					
+					
+				
+
 					
 					RNAMultiInfo rnamultiinfo =viennaRNA.RNAsubopt(textField.getText(),Double.parseDouble(textField_4.getText()));
 					System.out.println("\nRNAsubOptimal: ");
-					for (int i=0;i<rnamultiinfo.getSize();i++)
+					for (int i=0;i<rnamultiinfo.getSize();i++) {
 						System.out.println(rnamultiinfo.getStructure(i)+"    "+rnamultiinfo.getEnergy(i));
+					}
 					
 					//String distance= viennaRNA.RNAdistance("((..))", "......");
 					//System.out.println("\nThe distance is: " +distance);
@@ -110,6 +135,7 @@ public class Menu {
 						centroidOrFar=1;
 					else
 						centroidOrFar=0;
+					
 					
 					
 					new Thread() {

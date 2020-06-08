@@ -1,13 +1,22 @@
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import javax.swing.text.TableView;
 
-
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -18,15 +27,25 @@ import java.util.ArrayList;
 public class ResultsFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private String seq;
+	
+	JPanel ObestPanel = new JPanel(new GridLayout(1, 0));
+	JPanel TopObestPanel = new JPanel(new GridLayout(1, 0));
+	
+	
+	JTabbedPane tabbedPane = new JTabbedPane();
 
-	public ResultsFrame(ArrayList<ArrayList<String>> mut, String sequence) throws Exception {
+	public ResultsFrame(ArrayList<ArrayList<String>> mut,ArrayList<ArrayList<String>> mut2, String sequence) throws Exception {
 		super("Results");
 		String[] columnNames = { "Mutation Name", "Delta Energy", "Energy (kcal/mol)", "Distance",
 				"Dot-bracket representation", "Suboptimal structure" };
 
 		seq = sequence;
+			
+		
 
 		final Object[][] data = new Object[mut.size()+1][6];
+		final Object[][] data2 = new Object[mut2.size()+1][6];
+		
 
 		int count = 0;
 		for (ArrayList<String> row : mut) {
@@ -40,28 +59,43 @@ public class ResultsFrame extends JFrame {
 			count++;
 
 		}
+		
+		int count2 = 0;
+		for (ArrayList<String> row2 : mut2) {
+
+			data2[count2][0] = flip(row2.get(0));
+			data2[count2][1] = row2.get(1);
+			data2[count2][2] = row2.get(4);
+			data2[count2][3] = row2.get(6);
+			data2[count2][4] = row2.get(5);
+			data2[count2][5] = row2.get(3);
+			count2++;
+
+		}
 		ViennaRNA v = new ViennaRNA();
 		RNAInfo wt = v.RNAfold(sequence);
 
-		JPanel tablePanel = new JPanel(new GridLayout(1, 0));
-		final JTable table = new JTable(new MyTableModel(columnNames, data));
-		table.setPreferredScrollableViewportSize(new Dimension(1000, 500));
-		// table.setFillsViewportHeight(true);
-		table.setFont(new Font("Courier New", Font.PLAIN, 12));
-		(table.getColumnModel().getColumn(0)).setPreferredWidth(300);
-		(table.getColumnModel().getColumn(1)).setPreferredWidth(110);
-		(table.getColumnModel().getColumn(2)).setPreferredWidth(110);
-		(table.getColumnModel().getColumn(3)).setPreferredWidth(100);
-		(table.getColumnModel().getColumn(4)).setPreferredWidth(700);
-		(table.getColumnModel().getColumn(5)).setPreferredWidth(700);
 		
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		
+		final JTable OBestTable = new JTable(new MyTableModel(columnNames, data));
+		final JTable TopOBestTable = new JTable(new MyTableModel(columnNames, data2));
+		OBestTable.setPreferredScrollableViewportSize(new Dimension(1300, 500));
+		// table.setFillsViewportHeight(true);
+		OBestTable.setFont(new Font("Courier New", Font.PLAIN, 12));
+		(OBestTable.getColumnModel().getColumn(0)).setPreferredWidth(300);
+		(OBestTable.getColumnModel().getColumn(1)).setPreferredWidth(110);
+		(OBestTable.getColumnModel().getColumn(2)).setPreferredWidth(110);
+		(OBestTable.getColumnModel().getColumn(3)).setPreferredWidth(100);
+		(OBestTable.getColumnModel().getColumn(4)).setPreferredWidth(700);
+		(OBestTable.getColumnModel().getColumn(5)).setPreferredWidth(700);
+		
+		OBestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		OBestTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent event) {
 				if (event.getValueIsAdjusting()) {
 					return;
 				}
-				int index = table.getSelectionModel().getLeadSelectionIndex();
+				int index = OBestTable.getSelectionModel().getLeadSelectionIndex();
 
 				data[mut.size()][0] = "WT";
 				data[mut.size()][1] = v.RNAeval(sequence, wt.getStructure());
@@ -80,12 +114,57 @@ public class ResultsFrame extends JFrame {
 				 */
 			}
 		});
+		
+		TopOBestTable.setFont(new Font("Courier New", Font.PLAIN, 12));
+		TopOBestTable.setPreferredScrollableViewportSize(new Dimension(1300, 500));
+		(TopOBestTable.getColumnModel().getColumn(0)).setPreferredWidth(300);
+		(TopOBestTable.getColumnModel().getColumn(1)).setPreferredWidth(110);
+		(TopOBestTable.getColumnModel().getColumn(2)).setPreferredWidth(110);
+		(TopOBestTable.getColumnModel().getColumn(3)).setPreferredWidth(100);
+		(TopOBestTable.getColumnModel().getColumn(4)).setPreferredWidth(700);
+		(TopOBestTable.getColumnModel().getColumn(5)).setPreferredWidth(700);
+		
+		TopOBestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		TopOBestTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent event) {
+				if (event.getValueIsAdjusting()) {
+					return;
+				}
+				int index = TopOBestTable.getSelectionModel().getLeadSelectionIndex();
 
-		JScrollPane scrollPane = new JScrollPane(table);
-		tablePanel.add(scrollPane);
+				data2[mut2.size()][0] = "WT";
+				data2[mut2.size()][1] = v.RNAeval(sequence, wt.getStructure());
+				data2[mut2.size()][2] = wt.getEnergy();
+				data2[mut2.size()][3] = "";
+				data2[mut2.size()][4] = wt.getStructure();
+				data2[mut2.size()][5] = wt.getStructure();
+
+				System.out.println(data2[index][0]);
+				if ((data2[index][0]).equals("WT"))
+					return;
+				(new MutationFrame(data2[index], convertSequence(data2[index][0].toString()), data2[data2.length - 1],
+						sequence)).setVisible(true);
+				/*
+				 * File f = new File("rna.ps"); f.delete();
+				 */
+			}
+		});
+		
+		resizeColumnWidth(OBestTable);
+		resizeColumnWidth(TopOBestTable);
+
+		JScrollPane scrollPane = new JScrollPane(OBestTable);
+		JScrollPane scrollPane2 = new JScrollPane(TopOBestTable);
+		ObestPanel.add(scrollPane);
+		TopObestPanel.add(scrollPane2);
+		tabbedPane.add("O Best",ObestPanel);
+		tabbedPane.add("Top O Best",TopObestPanel);
+		add(tabbedPane);
+		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		tablePanel.setOpaque(true);
-		setContentPane(tablePanel);
+		ObestPanel.setOpaque(true);
+		TopObestPanel.setOpaque(true);
+		setContentPane(tabbedPane);
 		pack();
 		setLocationRelativeTo(null);
 	}
@@ -120,5 +199,20 @@ public class ResultsFrame extends JFrame {
 
 		return converted.substring(0, converted.length() - 1);
 	}
-
+	
+	public void resizeColumnWidth(JTable table) {
+	    final TableColumnModel columnModel = table.getColumnModel();
+	    for (int column = 0; column < table.getColumnCount(); column++) {
+	        int width = 15; // Min width
+	        for (int row = 0; row < table.getRowCount(); row++) {
+	            TableCellRenderer renderer = table.getCellRenderer(row, column);
+	            Component comp = table.prepareRenderer(renderer, row, column);
+	            width = Math.max(comp.getPreferredSize().width +1 , width);
+	        }
+	        if(width > 300)
+	            width=300;
+	        columnModel.getColumn(column).setPreferredWidth(width);
+	    }
+	}
+	
 }

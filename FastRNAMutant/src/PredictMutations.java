@@ -27,20 +27,13 @@ public class PredictMutations {
 	}
 
 	public void start(JFrame menu) {
-
-		Thread t = new Thread() {
-			public void run() {
-				Splash splash = new Splash();
-				splash.setVisible(true);
-				while (!this.interrupted()) {
-					// Do something
-				}
-				splash.setVisible(false);
-				System.out.println("splash");
-			}
-			
-
-		};
+		
+		menu.setEnabled(false);
+		Splash splash = new Splash("/filter.gif");
+		Thread t = new Thread(splash);
+		t.start();
+		
+	
 
 		ViennaRNA vienna = new ViennaRNA();
 		AlgoritmStep steps = new AlgoritmStep();
@@ -48,6 +41,7 @@ public class PredictMutations {
 		RNAInfo RNAoptimal = steps.findOptimal(RNAsequence);
 		RNAMultiInfo RNAsubOptimalBeforeFilttering=steps.findSubOptimal(RNAsequence,e_range);
 		//Filttering
+		
 		RNAMultiInfo RNAsubOptimal=new RNAMultiInfo();
 		for (int i=0;i<RNAsubOptimalBeforeFilttering.getSize();i++) {
 			if (Integer.parseInt(vienna.RNAdistance(RNAoptimal.getStructure(), RNAsubOptimalBeforeFilttering.getStructure(i)))>=distanceForFiltering) {
@@ -59,6 +53,7 @@ public class PredictMutations {
 		Dataset dataset=steps.createDataSetForKMedoids(RNAsubOptimal);
 		HashMap<String, Double> mapData=new HashMap<String, Double>();
 		//Calculating distances
+		splash.change("/distance.gif");
 		for (int i = 0; i < dataset.size(); i++) {
 			mapData.put(dataset.classValue(i).toString() + dataset.classValue(i).toString(), 0.0);
 			for (int j = i + 1; j < dataset.size(); j++) {
@@ -71,11 +66,12 @@ public class PredictMutations {
 			}
 		}
 		//finish Calculating distances
+		
 		TreeDecomposition td = new TreeDecomposition();
 		DynamicProgramming dp = new DynamicProgramming();
 		ArrayList<ArrayList<String>> O_BEST = new ArrayList<ArrayList<String>>();
 		ArrayList<ArrayList<String>> topO_BEST = new ArrayList<ArrayList<String>>();
-
+		System.out.println("tree decomp");
 		// =========Testing==============//
 
 		// ========================Rafi=====================================================
@@ -121,9 +117,11 @@ public class PredictMutations {
 		 * ri.setVisible(true);
 		 */
 		// ======End Testing=============//
-
+		
 		if (dataset.size() > k) {
+			
 			//Clustering
+			splash.change("/cluster.gif");
 			Dataset[] clustering = steps.findCluster(dataset, k, mapData);
 			//finish Clustering
 			for (int i = 0; i < clustering.length; i++) {
@@ -149,11 +147,11 @@ public class PredictMutations {
 					data.add(centroid.classValue(i).toString());
 				}
 				// Part of Combobox that we can choose the with which data we want.update data
-
+             
 				DataCheckBox myJTD = new DataCheckBox(data);
 				myJTD.setVisible(true);
 				data = myJTD.getPost();
-				t.start();
+				splash.change("/load.gif");
 				menu.setEnabled(false);
 
 				for (int i = 0; i < data.size(); i++) {
@@ -170,18 +168,13 @@ public class PredictMutations {
 						
 					}
 				}//
+
 				System.out.println("Success");
 				// ResultWindow r = new ResultWindow(O_BEST,RNAsequence);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				t.interrupt();
+				splash.stopSplash();
 				menu.setEnabled(true);
 				try {
-					new ResultsFrame(O_BEST, RNAsequence).setVisible(true);
+					new ResultsFrame(O_BEST,topO_BEST, RNAsequence).setVisible(true);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -204,7 +197,7 @@ public class PredictMutations {
 				DataCheckBox myJTD = new DataCheckBox(data);
 				myJTD.setVisible(true);
 				data = myJTD.getPost();
-				t.start();
+				splash.change("/load.gif");
 				menu.setEnabled(false);
 				for (int i = 0; i < data.size(); i++) {
 					ArrayList<ArrayList<Integer>> matrixGraph = td.makeMatrix(data.get(i), RNAoptimal.getStructure());
@@ -223,22 +216,17 @@ public class PredictMutations {
 				System.out.println("Success");
 //				ResultWindow r = new ResultWindow(O_BEST,RNAsequence);
 //				r.setVisible(true);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				t.interrupt();
+				splash.stopSplash();
 				menu.setEnabled(true);
 				try {
-					new ResultsFrame(O_BEST, RNAsequence).setVisible(true);
+					new ResultsFrame(O_BEST,topO_BEST, RNAsequence).setVisible(true);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		} else {
+			
 			ArrayList<String> data = new ArrayList<String>();
 			for (int i = 0; i < dataset.size(); i++) {
 				data.add(dataset.classValue(i).toString());
@@ -248,7 +236,7 @@ public class PredictMutations {
 			DataCheckBox myJTD = new DataCheckBox(data);
 			myJTD.setVisible(true);
 			data = myJTD.getPost();
-			t.start();
+			splash.change("/load.gif");
 			menu.setEnabled(false);
 			for (int i = 0; i < data.size(); i++) {
 				ArrayList<ArrayList<Integer>> matrixGraph = td.makeMatrix(data.get(i), RNAoptimal.getStructure());
@@ -266,16 +254,10 @@ public class PredictMutations {
 			System.out.println("Success Dynamic Progrr");
 //			ResultWindow r = new ResultWindow(O_BEST,RNAsequence);
 //			r.setVisible(true);
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			t.interrupt();
+			splash.stopSplash();
 			menu.setEnabled(true);
 			try {
-				new ResultsFrame(O_BEST, RNAsequence).setVisible(true);
+				new ResultsFrame(O_BEST,topO_BEST, RNAsequence).setVisible(true);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

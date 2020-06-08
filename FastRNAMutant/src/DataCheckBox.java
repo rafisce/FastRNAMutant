@@ -50,7 +50,7 @@ public class DataCheckBox extends JDialog {
 
 		public MainPanel(ArrayList<String> pre, DataCheckBox dataCheckBox) {
 			setLayout(null);
-			Splash s = new Splash();
+			
 			title = new JLabel("Choose Sequences from the table:");
 			title.setBounds(50, 10, 300, 20);
 			this.add(title);
