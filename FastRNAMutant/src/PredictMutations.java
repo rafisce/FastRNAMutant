@@ -169,7 +169,7 @@ public class PredictMutations {
 						CheckForTopO_BEST(topO_BEST,partOfO_BEST.get(j),ammountOfMutationGroup);
 						
 					}
-				}
+				}//
 				System.out.println("Success");
 				// ResultWindow r = new ResultWindow(O_BEST,RNAsequence);
 				try {

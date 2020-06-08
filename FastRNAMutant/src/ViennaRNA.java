@@ -134,7 +134,7 @@ public class ViennaRNA {
 	public String RNAeval(String str1,String str2) {
 		ArrayList<String> lines = new ArrayList<String>();
 		String eval="";
-		try {
+		try {//
 		    Process process = Runtime.getRuntime().exec("RNAeval.exe");
 		    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
 		    writer.write(str1 + "\n");
