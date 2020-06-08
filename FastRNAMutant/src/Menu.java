@@ -22,6 +22,7 @@ public class Menu {
 	private JTextField textField_3;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JTextField textField_4;
+	private JTextField textField_5;
 
 	/**
 	 * Launch the application.
@@ -51,7 +52,7 @@ public class Menu {
 	 */
 	private void initialize() {
 		frame = new JFrame("FastRNAmutants");
-		frame.setBounds(490, 200, 560, 411);
+		frame.setBounds(490, 200, 560, 471);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		
@@ -65,19 +66,19 @@ public class Menu {
 		rdbtnNewRadioButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		buttonGroup.add(rdbtnNewRadioButton);
 		//rdbtnNewRadioButton.setSelected(true);
-		rdbtnNewRadioButton.setBounds(32, 277, 103, 21);
+		rdbtnNewRadioButton.setBounds(24, 331, 103, 21);
 		frame.getContentPane().add(rdbtnNewRadioButton);
 		
 		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Far");
 		rdbtnNewRadioButton_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		buttonGroup.add(rdbtnNewRadioButton_1);
-		rdbtnNewRadioButton_1.setBounds(32, 300, 103, 21);
+		rdbtnNewRadioButton_1.setBounds(24, 354, 103, 21);
 		frame.getContentPane().add(rdbtnNewRadioButton_1);
 		
 		
 		JButton btnNewButton = new JButton("Start");
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		btnNewButton.setBounds(318, 292, 121, 37);
+		btnNewButton.setBounds(310, 346, 121, 37);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {	
 				if(!textField.getText().equals("") && CheckRNAInput(textField.getText())
@@ -85,6 +86,7 @@ public class Menu {
 						&& !textField_2.getText().equals("") && CheckNumberInput(textField_2.getText())
 						&& !textField_3.getText().equals("") && CheckNumberInput(textField_3.getText())
 						&& !textField_4.getText().equals("") && CheckNumberInput(textField_4.getText())
+						&& !textField_5.getText().equals("") && CheckNumberInput(textField_5.getText())
 						&& (Integer.parseInt(textField_1.getText())<=textField.getText().length())
 						&& (Integer.parseInt(textField_1.getText())>=1)
 						&& (rdbtnNewRadioButton.isSelected()||rdbtnNewRadioButton_1.isSelected())) {
@@ -112,7 +114,7 @@ public class Menu {
 					
 					new Thread() {
 					      public void run() {
-					    	  PredictMutations algPredict=new PredictMutations(textField.getText(),Integer.parseInt(textField_1.getText()),Integer.parseInt(textField_2.getText()),Integer.parseInt(textField_3.getText()),Integer.parseInt(textField_4.getText()),centroidOrFar);
+					    	  PredictMutations algPredict=new PredictMutations(textField.getText(),Integer.parseInt(textField_1.getText()),Integer.parseInt(textField_2.getText()),Integer.parseInt(textField_3.getText()),Double.parseDouble(textField_4.getText()),Integer.parseInt(textField_5.getText()),centroidOrFar);
 								algPredict.start(frame);
 					      }   
 					    }.start();
@@ -171,6 +173,13 @@ public class Menu {
 					}
 					else if(!textField_4.getText().equals("") && !CheckNumberDoubleInput(textField_4.getText())) {
 						text=text+"Number of e-range is invalid\n";
+					}
+					
+					if(textField_5.getText().equals("")) {
+						text=text+"Please enter distance for filtering\n";
+					}
+					else if(!textField_5.getText().equals("") && !CheckNumberInput(textField_5.getText())) {
+						text=text+"Number of distance for filtering is invalid\n";
 					}
 					
 					if (!(rdbtnNewRadioButton.isSelected()||rdbtnNewRadioButton_1.isSelected())) {
@@ -235,6 +244,17 @@ public class Menu {
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblNewLabel.setBounds(31, 227, 193, 25);
 		frame.getContentPane().add(lblNewLabel);
+		
+		textField_5 = new JTextField();
+		textField_5.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		textField_5.setBounds(331, 266, 96, 31);
+		frame.getContentPane().add(textField_5);
+		textField_5.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("Distance for filtering");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNewLabel_1.setBounds(32, 266, 206, 31);
+		frame.getContentPane().add(lblNewLabel_1);
 	}
 	public boolean CheckRNAInput(String str) {
 		for(int i=0;i<str.length();i++) {

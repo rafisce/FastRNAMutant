@@ -64,6 +64,48 @@ public class ViennaRNA {
 	}
 	
 	public String RNAdistance(String str1,String str2) {
+		int sum=0;
+		ArrayList<Integer> stack=new ArrayList<Integer>();
+		int[] arr1=new int[str1.length()];
+		int[] arr2=new int[str1.length()];
+		
+		for (int i = 0; i < str1.length(); i++) {
+			arr1[i] = -1;
+			arr2[i] = -1;
+		}
+		
+		for (int i = 0; i < str1.length(); i++) {
+			if (str1.charAt(i) == '(') 
+				stack.add(i);
+			if (str1.charAt(i) == ')') {
+				int place = stack.get(stack.size()-1);
+				stack.remove(stack.size()-1);
+				arr1[place] = i;
+			}
+		}
+		
+		for (int i = 0; i < str2.length(); i++) {
+			if (str2.charAt(i) == '(') 
+				stack.add(i);
+			if (str2.charAt(i) == ')') {
+				int place = stack.get(stack.size()-1);
+				stack.remove(stack.size()-1);
+				arr2[place] = i;
+			}
+		}
+		
+		for (int i = 0; i < str1.length(); i++) {
+			if ((arr1[i] == -1 && arr2[i] != -1) || (arr1[i] != -1 && arr2[i] == -1)) 
+				sum++;
+			else if (arr1[i] != arr2[i]) 
+				sum += 2;
+		}
+		
+		return String.valueOf(sum);
+	}
+	
+	/*
+	public String RNAdistance(String str1,String str2) {
 		ArrayList<String> lines = new ArrayList<String>();
 		String distance="";
 		try {
@@ -87,6 +129,7 @@ public class ViennaRNA {
 		
 		return distance;
 	}
+	*/
 	
 	public String RNAeval(String str1,String str2) {
 		ArrayList<String> lines = new ArrayList<String>();
