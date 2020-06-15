@@ -16,43 +16,43 @@ public class PredictMutations {
 	private int distanceForFiltering;
 	private int centroidOrFar;
 
-	PredictMutations(String RNAsequence, int numOfMutations, int ammountOfMutationGroup, int k, double e_range, int distanceForFiltering,int centroidOrFar) {
+	PredictMutations(String RNAsequence, int numOfMutations, int ammountOfMutationGroup, int k, double e_range,
+			int distanceForFiltering, int centroidOrFar) {
 		this.RNAsequence = RNAsequence;
 		this.numOfMutations = numOfMutations;
 		this.ammountOfMutationGroup = ammountOfMutationGroup;
 		this.k = k;
 		this.e_range = e_range;
-		this.distanceForFiltering=distanceForFiltering;
+		this.distanceForFiltering = distanceForFiltering;
 		this.centroidOrFar = centroidOrFar;
 	}
 
 	public void start(JFrame menu) {
-		
+
 		menu.setEnabled(false);
 		Splash splash = new Splash("/filter.gif");
 		Thread t = new Thread(splash);
 		t.start();
-		
-	
 
 		ViennaRNA vienna = new ViennaRNA();
 		AlgoritmStep steps = new AlgoritmStep();
 		System.out.println(RNAsequence);
 		RNAInfo RNAoptimal = steps.findOptimal(RNAsequence);
-		RNAMultiInfo RNAsubOptimalBeforeFilttering=steps.findSubOptimal(RNAsequence,e_range);
-		//Filttering
-		
-		RNAMultiInfo RNAsubOptimal=new RNAMultiInfo();
-		for (int i=0;i<RNAsubOptimalBeforeFilttering.getSize();i++) {
-			if (Integer.parseInt(vienna.RNAdistance(RNAoptimal.getStructure(), RNAsubOptimalBeforeFilttering.getStructure(i)))>=distanceForFiltering) {
+		RNAMultiInfo RNAsubOptimalBeforeFilttering = steps.findSubOptimal(RNAsequence, e_range);
+		// Filttering
+
+		RNAMultiInfo RNAsubOptimal = new RNAMultiInfo();
+		for (int i = 0; i < RNAsubOptimalBeforeFilttering.getSize(); i++) {
+			if (Integer.parseInt(vienna.RNAdistance(RNAoptimal.getStructure(),
+					RNAsubOptimalBeforeFilttering.getStructure(i))) >= distanceForFiltering) {
 				RNAsubOptimal.setStructure(RNAsubOptimalBeforeFilttering.getStructure(i));
 				RNAsubOptimal.setEnergy(RNAsubOptimalBeforeFilttering.getEnergy(i));
 			}
 		}
-		//double[][] matrixDistance=steps.makeDistanceMatrix(RNAsubOptimal); //not used
-		Dataset dataset=steps.createDataSetForKMedoids(RNAsubOptimal);
-		HashMap<String, Double> mapData=new HashMap<String, Double>();
-		//Calculating distances
+		// double[][] matrixDistance=steps.makeDistanceMatrix(RNAsubOptimal); //not used
+		Dataset dataset = steps.createDataSetForKMedoids(RNAsubOptimal);
+		HashMap<String, Double> mapData = new HashMap<String, Double>();
+		// Calculating distances
 		splash.change("/distance.gif");
 		for (int i = 0; i < dataset.size(); i++) {
 			mapData.put(dataset.classValue(i).toString() + dataset.classValue(i).toString(), 0.0);
@@ -61,12 +61,12 @@ public class PredictMutations {
 						vienna.RNAdistance(dataset.classValue(i).toString(), dataset.classValue(j).toString()));
 				mapData.put(dataset.classValue(i).toString() + dataset.classValue(j).toString(), distance);
 				mapData.put(dataset.classValue(j).toString() + dataset.classValue(i).toString(), distance);
-				if (i%20==0 && j%100==0)
-				System.out.println("distance " + i + " to " + j + " is   " + distance);
+				if (i % 20 == 0 && j % 100 == 0)
+					System.out.println("distance " + i + " to " + j + " is   " + distance);
 			}
 		}
-		//finish Calculating distances
-		
+		// finish Calculating distances
+
 		TreeDecomposition td = new TreeDecomposition();
 		DynamicProgramming dp = new DynamicProgramming();
 		ArrayList<ArrayList<String>> O_BEST = new ArrayList<ArrayList<String>>();
@@ -117,20 +117,20 @@ public class PredictMutations {
 		 * ri.setVisible(true);
 		 */
 		// ======End Testing=============//
-		
+
 		if (dataset.size() > k) {
-			
-			//Clustering
+
+			// Clustering
 			splash.change("/cluster.gif");
 			Dataset[] clustering = steps.findCluster(dataset, k, mapData);
-			//finish Clustering
+			// finish Clustering
 			for (int i = 0; i < clustering.length; i++) {
 				for (int j = 0; j < clustering[i].size(); j++) {
 					for (int c = j + 1; c < clustering[i].size(); c++) {
-						if (j%20==0 && c%20==0)
-						System.out.println("cluster " + i + " distance from " + j + " to " + c + " is "
-								+ mapData.get(clustering[i].get(j).classValue().toString()
-										+ clustering[i].get(c).classValue().toString()));
+						if (j % 20 == 0 && c % 20 == 0)
+							System.out.println("cluster " + i + " distance from " + j + " to " + c + " is "
+									+ mapData.get(clustering[i].get(j).classValue().toString()
+											+ clustering[i].get(c).classValue().toString()));
 					}
 				}
 			}
@@ -147,11 +147,13 @@ public class PredictMutations {
 					data.add(centroid.classValue(i).toString());
 				}
 				// Part of Combobox that we can choose the with which data we want.update data
-             
+				splash.stopSplash();
 				DataCheckBox myJTD = new DataCheckBox(data);
 				myJTD.setVisible(true);
 				data = myJTD.getPost();
-				splash.change("/load.gif");
+				Splash progress = new Splash(data.size());
+				
+				menu.toFront();
 				menu.setEnabled(false);
 
 				for (int i = 0; i < data.size(); i++) {
@@ -164,17 +166,18 @@ public class PredictMutations {
 					for (int j = 0; j < partOfO_BEST.size(); j++) {
 						O_BEST.add(partOfO_BEST.get(j));
 						System.out.println(partOfO_BEST.get(j));
-						CheckForTopO_BEST(topO_BEST,partOfO_BEST.get(j),ammountOfMutationGroup);
-						
+						CheckForTopO_BEST(topO_BEST, partOfO_BEST.get(j), ammountOfMutationGroup);
 					}
-				}//
+					progress.progress();
+				} //
 
 				System.out.println("Success");
 				// ResultWindow r = new ResultWindow(O_BEST,RNAsequence);
 				splash.stopSplash();
 				menu.setEnabled(true);
 				try {
-					new ResultsFrame(O_BEST,topO_BEST, RNAsequence).setVisible(true);
+					
+					new ResultsFrame(O_BEST, topO_BEST, RNAsequence).setVisible(true);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -193,11 +196,12 @@ public class PredictMutations {
 					data.add(far.classValue(i).toString());
 				}
 				// Part of Combobox that we can choose the with which data we want. -update data
-
+				splash.stopSplash();
 				DataCheckBox myJTD = new DataCheckBox(data);
 				myJTD.setVisible(true);
 				data = myJTD.getPost();
-				splash.change("/load.gif");
+				Splash progress = new Splash(data.size());
+				
 				menu.setEnabled(false);
 				for (int i = 0; i < data.size(); i++) {
 					ArrayList<ArrayList<Integer>> matrixGraph = td.makeMatrix(data.get(i), RNAoptimal.getStructure());
@@ -210,8 +214,9 @@ public class PredictMutations {
 					for (int j = 0; j < partOfO_BEST.size(); j++) {
 						O_BEST.add(partOfO_BEST.get(j));
 						System.out.println(partOfO_BEST.get(j));
-						CheckForTopO_BEST(topO_BEST,partOfO_BEST.get(j),ammountOfMutationGroup);
+						CheckForTopO_BEST(topO_BEST, partOfO_BEST.get(j), ammountOfMutationGroup);
 					}
+					progress.progress();
 				}
 				System.out.println("Success");
 //				ResultWindow r = new ResultWindow(O_BEST,RNAsequence);
@@ -219,26 +224,29 @@ public class PredictMutations {
 				splash.stopSplash();
 				menu.setEnabled(true);
 				try {
-					new ResultsFrame(O_BEST,topO_BEST, RNAsequence).setVisible(true);
+					
+					new ResultsFrame(O_BEST, topO_BEST, RNAsequence).setVisible(true);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		} else {
-			
+
 			ArrayList<String> data = new ArrayList<String>();
 			for (int i = 0; i < dataset.size(); i++) {
 				data.add(dataset.classValue(i).toString());
 			}
 
 			// Part of Combobox that we can choose the with which data we want.update data
+			splash.stopSplash();
 			DataCheckBox myJTD = new DataCheckBox(data);
 			myJTD.setVisible(true);
 			data = myJTD.getPost();
-			splash.change("/load.gif");
+			Splash progress = new Splash(data.size());
 			menu.setEnabled(false);
 			for (int i = 0; i < data.size(); i++) {
+
 				ArrayList<ArrayList<Integer>> matrixGraph = td.makeMatrix(data.get(i), RNAoptimal.getStructure());
 				Node tree = td.MakeTree(matrixGraph);
 				// Dynamic Programming
@@ -248,8 +256,10 @@ public class PredictMutations {
 				for (int j = 0; j < partOfO_BEST.size(); j++) {
 					O_BEST.add(partOfO_BEST.get(j));
 					System.out.println(partOfO_BEST.get(j));
-					CheckForTopO_BEST(topO_BEST,partOfO_BEST.get(j),ammountOfMutationGroup);
+					CheckForTopO_BEST(topO_BEST, partOfO_BEST.get(j), ammountOfMutationGroup);
 				}
+				progress.progress();
+
 			}
 			System.out.println("Success Dynamic Progrr");
 //			ResultWindow r = new ResultWindow(O_BEST,RNAsequence);
@@ -257,7 +267,8 @@ public class PredictMutations {
 			splash.stopSplash();
 			menu.setEnabled(true);
 			try {
-				new ResultsFrame(O_BEST,topO_BEST, RNAsequence).setVisible(true);
+				
+				new ResultsFrame(O_BEST, topO_BEST, RNAsequence).setVisible(true);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -266,26 +277,28 @@ public class PredictMutations {
 		}
 
 	}
-	
-	public void CheckForTopO_BEST(ArrayList<ArrayList<String>> topO_BEST,ArrayList<String> infoPartO_BEST ,int ammountOfMutationGroup) {
-		if (topO_BEST.size()==0) {
+
+	public void CheckForTopO_BEST(ArrayList<ArrayList<String>> topO_BEST, ArrayList<String> infoPartO_BEST,
+			int ammountOfMutationGroup) {
+		if (topO_BEST.size() == 0) {
 			topO_BEST.add(infoPartO_BEST);
-		}
-		else if (topO_BEST.size()==ammountOfMutationGroup && Double.parseDouble(infoPartO_BEST.get(1))<Double.parseDouble(topO_BEST.get(ammountOfMutationGroup-1).get(1))) {return;}
-		else {
-			int flag=1;
-			for(int t=0;t<topO_BEST.size();t++) {
-				if (Double.parseDouble(infoPartO_BEST.get(1))>Double.parseDouble(topO_BEST.get(t).get(1))) {
-					topO_BEST.add(t,infoPartO_BEST);
-					t=topO_BEST.size();
-					flag=0;
+		} else if (topO_BEST.size() == ammountOfMutationGroup && Double.parseDouble(infoPartO_BEST.get(1)) < Double
+				.parseDouble(topO_BEST.get(ammountOfMutationGroup - 1).get(1))) {
+			return;
+		} else {
+			int flag = 1;
+			for (int t = 0; t < topO_BEST.size(); t++) {
+				if (Double.parseDouble(infoPartO_BEST.get(1)) > Double.parseDouble(topO_BEST.get(t).get(1))) {
+					topO_BEST.add(t, infoPartO_BEST);
+					t = topO_BEST.size();
+					flag = 0;
 				}
 			}
-			if(flag==1) {
+			if (flag == 1) {
 				topO_BEST.add(infoPartO_BEST);
-				
+
 			}
-			if (topO_BEST.size()>ammountOfMutationGroup) {
+			if (topO_BEST.size() > ammountOfMutationGroup) {
 				topO_BEST.remove(ammountOfMutationGroup);
 			}
 		}
