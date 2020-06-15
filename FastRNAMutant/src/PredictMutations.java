@@ -151,8 +151,7 @@ public class PredictMutations {
 				DataCheckBox myJTD = new DataCheckBox(data);
 				myJTD.setVisible(true);
 				data = myJTD.getPost();
-				Splash progress = new Splash(data.size());
-				
+				Splash progress = new Splash(data.size());		
 				menu.toFront();
 				menu.setEnabled(false);
 
@@ -168,8 +167,9 @@ public class PredictMutations {
 						System.out.println(partOfO_BEST.get(j));
 						CheckForTopO_BEST(topO_BEST, partOfO_BEST.get(j), ammountOfMutationGroup);
 					}
+					//progress bar
 					progress.progress();
-				} //
+				} 
 
 				System.out.println("Success");
 				// ResultWindow r = new ResultWindow(O_BEST,RNAsequence);

@@ -97,15 +97,13 @@ public class Splash extends JFrame implements Runnable, ActionListener {
 	}
 
 	public Splash(int count) {
+		//progress bar builder
 		sum = count;
 		setSize(250, 100);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pbar = new ProgressMonitor(null, "", "Initializing . . .", 0, count);
 		Timer timer = new Timer(500, this);
 		timer.start();
-
-		// setAlwaysOnTop(true);
-		// setVisible(true);
 	}
 
 	public void progress() {
