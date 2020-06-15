@@ -106,19 +106,10 @@ public class Menu {
 						&& (Integer.parseInt(textField_1.getText())>=1)
 						&& (rdbtnNewRadioButton.isSelected()||rdbtnNewRadioButton_1.isSelected())) {
 					ViennaRNA viennaRNA=new ViennaRNA();
+					//String v=viennaRNA.RNAfoldConstraint("CCCAACCCCAAAGGGG", "(.(..........).)");
 					RNAInfo rnainfo=viennaRNA.RNAfold(textField.getText());
-					
-					
-				
 					System.out.println("Structure of optimal:  "+rnainfo.getStructure());
 					System.out.println("Energy of optimal:  "+rnainfo.getEnergy());
-				
-					
-					
-					
-				
-
-					
 					RNAMultiInfo rnamultiinfo =viennaRNA.RNAsubopt(textField.getText(),Double.parseDouble(textField_4.getText()));
 					System.out.println("\nRNAsubOptimal: ");
 					for (int i=0;i<rnamultiinfo.getSize();i++) {

@@ -83,14 +83,14 @@ public class DynamicProgramming {
 						//No edge optimal
 						if (edgeOptimal==-1) {
 							double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure, alefBet.get(j).charAt(0), second);
-							deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;			
+							deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;			
 						}
 						//Edge with relation
 						else if (edgeOptimal==first) {
 								whichOneOptimal=first;
 								whichOneIndexOptimal=i;
 								double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure,alefBet.get(i).charAt(0),first ,alefBet.get(j).charAt(0), second);
-								deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;
+								deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;
 						}
 						//Edge without relation
 						else {
@@ -115,7 +115,7 @@ public class DynamicProgramming {
 							deltaEnergySubopt=0;
 						}
 						
-						deltaEnergy=deltaEnergyOptimal-deltaEnergySubopt;
+						deltaEnergy=deltaEnergyOptimal+deltaEnergySubopt;
 						String letter=alefBet.get(j).substring(0);
 						ArrayList<String> keyChild= new ArrayList<String>();
 						//CheckForO_BEST(topO_BEST.get(numOfMutation(letter,RNAsequence.substring(second,second+1),0)), letter, "","", deltaEnergy, ammountOfMutationGroup);
@@ -149,7 +149,7 @@ public class DynamicProgramming {
 							//No edge optimal
 							if (edgeOptimal==-1) {
 								double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure, alefBet.get(k).charAt(0), third);
-								deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;			
+								deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;			
 							}
 							//Edge with relation
 							else if (edgeOptimal==first || edgeOptimal==second) {
@@ -160,7 +160,7 @@ public class DynamicProgramming {
 										whichOneIndexOptimal=j;
 									}
 									double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure,alefBet.get(whichOneIndexOptimal).charAt(0),whichOneOptimal ,alefBet.get(k).charAt(0), third);
-									deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;
+									deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;
 							}
 							//Edge without relation
 							else {
@@ -189,7 +189,7 @@ public class DynamicProgramming {
 								deltaEnergySubopt=0;
 							}
 							
-							deltaEnergy=deltaEnergyOptimal-deltaEnergySubopt;
+							deltaEnergy=deltaEnergyOptimal+deltaEnergySubopt;
 							String letter=alefBet.get(k).substring(0);
 							ArrayList<String> keyChild= new ArrayList<String>();
 							//CheckForO_BEST(topO_BEST.get(numOfMutation(letter,RNAsequence.substring(third,third+1),0)), letter, "","", deltaEnergy, ammountOfMutationGroup);
@@ -247,7 +247,7 @@ public class DynamicProgramming {
 					//No edge optimal
 					if (edgeOptimal==-1) {
 						double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure, alefBet.get(i).charAt(0), first);
-						deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;			
+						deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;	
 					}
 					//Edge with optimal
 					else {
@@ -265,7 +265,7 @@ public class DynamicProgramming {
 						deltaEnergySubopt=0;
 					}
 					
-					deltaEnergy=deltaEnergyOptimal-deltaEnergySubopt;
+					deltaEnergy=deltaEnergyOptimal+deltaEnergySubopt;
 		
 					double deltaEnergyWithChild;
 
@@ -308,14 +308,14 @@ public class DynamicProgramming {
 						//No edge optimal
 						if (edgeOptimal==-1) {
 							double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure, alefBet.get(j).charAt(0), second);
-							deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;			
+							deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;			
 						}
 						//Edge with relation
 						else if (edgeOptimal==first) {
 								whichOneOptimal=first;
 								whichOneIndexOptimal=i;
 								double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure,alefBet.get(i).charAt(0),first ,alefBet.get(j).charAt(0), second);
-								deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;
+								deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;
 						}
 						//Edge without relation
 						else {
@@ -340,7 +340,7 @@ public class DynamicProgramming {
 							deltaEnergySubopt=0;
 						}
 						
-						deltaEnergy=deltaEnergyOptimal-deltaEnergySubopt;
+						deltaEnergy=deltaEnergyOptimal+deltaEnergySubopt;
 						String letter=alefBet.get(j).substring(0);
 						
 						ArrayList<String> keyChild;
@@ -401,7 +401,7 @@ public class DynamicProgramming {
 							//No edge optimal
 							if (edgeOptimal==-1) {
 								double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure, alefBet.get(k).charAt(0), third);
-								deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;			
+								deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;			
 							}
 							//Edge with relation
 							else if (edgeOptimal==first || edgeOptimal==second) {
@@ -412,7 +412,7 @@ public class DynamicProgramming {
 										whichOneIndexOptimal=j;
 									}
 									double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure,alefBet.get(whichOneIndexOptimal).charAt(0),whichOneOptimal ,alefBet.get(k).charAt(0), third);
-									deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;
+									deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;
 							}
 							//Edge without relation
 							else {
@@ -441,7 +441,7 @@ public class DynamicProgramming {
 								deltaEnergySubopt=0;
 							}
 							
-							deltaEnergy=deltaEnergyOptimal-deltaEnergySubopt;
+							deltaEnergy=deltaEnergyOptimal+deltaEnergySubopt;
 							String letter=alefBet.get(k);
 							ArrayList<String> keyChild;
 							
@@ -495,14 +495,14 @@ public class DynamicProgramming {
 						//No edge optimal
 						if (edgeOptimal==-1) {
 							double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure, alefBet.get(j).charAt(0), second);
-							deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;			
+							deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;		
 						}
 						//Edge with relation
 						else if (edgeOptimal==first) {
 								whichOneOptimal=first;
 								whichOneIndexOptimal=i;
 								double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure,alefBet.get(i).charAt(0),first ,alefBet.get(j).charAt(0), second);
-								deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;
+								deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;
 						}
 						//Edge without relation
 						else {
@@ -527,7 +527,7 @@ public class DynamicProgramming {
 							deltaEnergySubopt=0;
 						}
 						
-						deltaEnergy=deltaEnergyOptimal-deltaEnergySubopt;
+						deltaEnergy=deltaEnergyOptimal+deltaEnergySubopt;
 						String letter=alefBet.get(j).substring(0);
 						
 						ArrayList<String> keyChild1;
@@ -623,7 +623,7 @@ public class DynamicProgramming {
 							//No edge optimal
 							if (edgeOptimal==-1) {
 								double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure, alefBet.get(k).charAt(0), third);
-								deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;			
+								deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;		
 							}
 							//Edge with relation
 							else if (edgeOptimal==first || edgeOptimal==second) {
@@ -634,7 +634,7 @@ public class DynamicProgramming {
 										whichOneIndexOptimal=j;
 									}
 									double energyOptimalAfterMutation=calcDeltaEnergyAfterMutation(RNAsequence, optimalStructure,alefBet.get(whichOneIndexOptimal).charAt(0),whichOneOptimal ,alefBet.get(k).charAt(0), third);
-									deltaEnergyOptimal=energyOptimalBeforeMutation-energyOptimalAfterMutation;
+									deltaEnergyOptimal=energyOptimalAfterMutation-energyOptimalBeforeMutation;
 							}
 							//Edge without relation
 							else {
@@ -663,7 +663,7 @@ public class DynamicProgramming {
 								deltaEnergySubopt=0;
 							}
 							
-							deltaEnergy=deltaEnergyOptimal-deltaEnergySubopt;
+							deltaEnergy=deltaEnergyOptimal+deltaEnergySubopt;
 							String letter=alefBet.get(k);
 							
 							ArrayList<String> keyChild1;
@@ -948,8 +948,7 @@ public class DynamicProgramming {
 	public double calcDeltaEnergyAfterMutation(String RNAsequence,String structure,char letter,int index) {
 		ViennaRNA vienna =new ViennaRNA();
 		String newSequence=changeSequence(RNAsequence, letter, index);
-		String newStructure=FindNewEdge(newSequence, structure, index);
-		return Double.parseDouble(vienna.RNAeval(newSequence, newStructure));
+		return Double.parseDouble(vienna.RNAfoldConstraint(newSequence, structure));	
 	}
 	
 	public double calcDeltaEnergyAfterMutation(String RNAsequence,String structure,char letter1,int index1,char letter2,int index2) {
