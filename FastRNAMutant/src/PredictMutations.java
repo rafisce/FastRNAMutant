@@ -151,7 +151,7 @@ public class PredictMutations {
 				DataCheckBox myJTD = new DataCheckBox(data);
 				myJTD.setVisible(true);
 				data = myJTD.getPost();
-				Splash progress = new Splash(data.size());		
+				Splash progress = new Splash(data.size());
 				menu.toFront();
 				menu.setEnabled(false);
 
@@ -167,16 +167,16 @@ public class PredictMutations {
 						System.out.println(partOfO_BEST.get(j));
 						CheckForTopO_BEST(topO_BEST, partOfO_BEST.get(j), ammountOfMutationGroup);
 					}
-					//progress bar
+					// progress bar
 					progress.progress();
-				} 
+				}
 
 				System.out.println("Success");
 				// ResultWindow r = new ResultWindow(O_BEST,RNAsequence);
 				splash.stopSplash();
 				menu.setEnabled(true);
 				try {
-					
+
 					new ResultsFrame(O_BEST, topO_BEST, RNAsequence).setVisible(true);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -201,7 +201,8 @@ public class PredictMutations {
 				myJTD.setVisible(true);
 				data = myJTD.getPost();
 				Splash progress = new Splash(data.size());
-				
+				menu.toFront();
+
 				menu.setEnabled(false);
 				for (int i = 0; i < data.size(); i++) {
 					ArrayList<ArrayList<Integer>> matrixGraph = td.makeMatrix(data.get(i), RNAoptimal.getStructure());
@@ -224,7 +225,7 @@ public class PredictMutations {
 				splash.stopSplash();
 				menu.setEnabled(true);
 				try {
-					
+
 					new ResultsFrame(O_BEST, topO_BEST, RNAsequence).setVisible(true);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -244,6 +245,7 @@ public class PredictMutations {
 			myJTD.setVisible(true);
 			data = myJTD.getPost();
 			Splash progress = new Splash(data.size());
+			menu.toFront();
 			menu.setEnabled(false);
 			for (int i = 0; i < data.size(); i++) {
 
@@ -258,6 +260,7 @@ public class PredictMutations {
 					System.out.println(partOfO_BEST.get(j));
 					CheckForTopO_BEST(topO_BEST, partOfO_BEST.get(j), ammountOfMutationGroup);
 				}
+				//progress
 				progress.progress();
 
 			}
@@ -267,7 +270,7 @@ public class PredictMutations {
 			splash.stopSplash();
 			menu.setEnabled(true);
 			try {
-				
+
 				new ResultsFrame(O_BEST, topO_BEST, RNAsequence).setVisible(true);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block

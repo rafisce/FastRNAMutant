@@ -97,7 +97,7 @@ public class Splash extends JFrame implements Runnable, ActionListener {
 	}
 
 	public Splash(int count) {
-		//progress bar builder
+		//progress bar
 		sum = count;
 		setSize(250, 100);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
