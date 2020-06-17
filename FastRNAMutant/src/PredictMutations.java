@@ -51,6 +51,8 @@ public class PredictMutations {
 		}
 		// double[][] matrixDistance=steps.makeDistanceMatrix(RNAsubOptimal); //not used
 		Dataset dataset = steps.createDataSetForKMedoids(RNAsubOptimal);
+		
+		
 		HashMap<String, Double> mapData = new HashMap<String, Double>();
 		// Calculating distances
 		splash.change("/distance.gif");
@@ -142,17 +144,19 @@ public class PredictMutations {
 				}
 			}
 			if (centroidOrFar == 1) {
+				
 				ArrayList<String> data = new ArrayList<String>();
 				for (int i = 0; i < centroid.size(); i++) {
 					data.add(centroid.classValue(i).toString());
 				}
 				// Part of Combobox that we can choose the with which data we want.update data
 				splash.stopSplash();
+				splash.change("/load.gif");
 				DataCheckBox myJTD = new DataCheckBox(data);
 				myJTD.setVisible(true);
 				data = myJTD.getPost();
-				Splash progress = new Splash(data.size());
 				menu.toFront();
+				splash.startSplash(data.size());
 				menu.setEnabled(false);
 
 				for (int i = 0; i < data.size(); i++) {
@@ -168,7 +172,14 @@ public class PredictMutations {
 						CheckForTopO_BEST(topO_BEST, partOfO_BEST.get(j), ammountOfMutationGroup);
 					}
 					// progress bar
-					progress.progress();
+					splash.progress(i + 1);
+
+				}
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 
 				System.out.println("Success");
@@ -197,12 +208,12 @@ public class PredictMutations {
 				}
 				// Part of Combobox that we can choose the with which data we want. -update data
 				splash.stopSplash();
+				splash.change("/load.gif");
 				DataCheckBox myJTD = new DataCheckBox(data);
 				myJTD.setVisible(true);
 				data = myJTD.getPost();
-				Splash progress = new Splash(data.size());
 				menu.toFront();
-
+				splash.startSplash(data.size());
 				menu.setEnabled(false);
 				for (int i = 0; i < data.size(); i++) {
 					ArrayList<ArrayList<Integer>> matrixGraph = td.makeMatrix(data.get(i), RNAoptimal.getStructure());
@@ -217,13 +228,21 @@ public class PredictMutations {
 						System.out.println(partOfO_BEST.get(j));
 						CheckForTopO_BEST(topO_BEST, partOfO_BEST.get(j), ammountOfMutationGroup);
 					}
-					progress.progress();
+					splash.progress(i + 1);
+				}
+
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				System.out.println("Success");
 //				ResultWindow r = new ResultWindow(O_BEST,RNAsequence);
 //				r.setVisible(true);
 				splash.stopSplash();
 				menu.setEnabled(true);
+				
 				try {
 
 					new ResultsFrame(O_BEST, topO_BEST, RNAsequence).setVisible(true);
@@ -235,17 +254,20 @@ public class PredictMutations {
 		} else {
 
 			ArrayList<String> data = new ArrayList<String>();
+			
+			
 			for (int i = 0; i < dataset.size(); i++) {
 				data.add(dataset.classValue(i).toString());
 			}
 
 			// Part of Combobox that we can choose the with which data we want.update data
 			splash.stopSplash();
+			splash.change("/load.gif");
 			DataCheckBox myJTD = new DataCheckBox(data);
 			myJTD.setVisible(true);
 			data = myJTD.getPost();
-			Splash progress = new Splash(data.size());
 			menu.toFront();
+			splash.startSplash(data.size());
 			menu.setEnabled(false);
 			for (int i = 0; i < data.size(); i++) {
 
@@ -260,9 +282,15 @@ public class PredictMutations {
 					System.out.println(partOfO_BEST.get(j));
 					CheckForTopO_BEST(topO_BEST, partOfO_BEST.get(j), ammountOfMutationGroup);
 				}
-				//progress
-				progress.progress();
+				// progress
+				splash.progress(i + 1);
 
+			}
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			System.out.println("Success Dynamic Progrr");
 //			ResultWindow r = new ResultWindow(O_BEST,RNAsequence);
